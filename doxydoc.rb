@@ -24,9 +24,14 @@ class RDoc::Parser::Doxygen < RDoc::Parser
       exit
     end
     index = Hpricot(open(File.join(@doxyout,'index.xml')).read)
-    (index/'//compound[@kind="file"]/member[@kind="function"]/name/text()').each do |f|
-      method = RDoc::AnyMethod.new(nil, f.to_s)
-      @top_level.add_method method
+    (index/'/doxygenindex/compound').each do |compound|
+      refid = compound[:refid].to_s
+      compounddef = Hpricot(open(File.join(@doxyout, refid+'.xml')).read)
+      (compounddef/'/doxygen/compounddef/sectiondef[@kind="func"]/memberdef[@kind="function"]').each do |function|
+        name = (function/'name/text()').to_s
+        method = RDoc::AnyMethod.new(nil, name)
+        @top_level.add_method method
+      end
     end
 
     @top_level
