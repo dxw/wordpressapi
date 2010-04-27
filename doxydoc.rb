@@ -24,7 +24,7 @@ class RDoc::Parser::Doxygen < RDoc::Parser
     run_doxygen
 
     index = Nokogiri::XML(open(File.join(@doxyout,'index.xml')))
-    index.xpath('/doxygenindex/compound').each do |compound|
+    index.xpath('/doxygenindex/compound[@kind!="dir"]').each do |compound|
 
       refid = compound.xpath('@refid').text
       file = File.join(@@superdoxy, refid+'.xml')
@@ -100,12 +100,12 @@ class RDoc::Parser::Doxygen < RDoc::Parser
     Dir.mkdir @doxyout
 
     if global
-      input_files = '.'
+      input_files = 'wp-includes'
     else
       input_files = %Q%"#{@path}"%
     end
     xml_output = %Q%"#{@doxyout}"%
-    @doxyfile.write ERB.new(open('../Doxyfile.erb').read).result(binding)
+    @doxyfile.write ERB.new(open(File.join(File.dirname(__FILE__),'Doxyfile.erb')).read).result(binding)
     @doxyfile.flush
   end
 
@@ -179,8 +179,6 @@ end
 
 if __FILE__ == $0
   r = RDoc::RDoc.new
-  wpdir = 'wordpress'
   output = 'doc'
-  Dir.chdir wpdir
-  r.document ['wp-includes', '-o', "../#{output}"]
+  r.document ['README.rdoc', 'wp-includes', '-o', output]
 end

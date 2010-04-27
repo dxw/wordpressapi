@@ -1,12 +1,18 @@
 = WordPress API
 
-Generates RDoc documentation for WordPress using Doxygen.
+WordPress's self-documentation rendered using RDoc.
+
+== Get started
+
+- Search for it
+- Everything available as a function that isn't a class/instance method is found in Object
 
 == Generate your own
 
 How to generate the documentation:
 
   git clone git://github.com/dxw/wordpress.git
+  ln -s wordpress/wp-includes
   ruby doxydoc.rb
 
 And your documentation will be in doc.
@@ -19,4 +25,4 @@ We create an RDoc::Parser that uses Doxygen, and then we use some magick to conv
 
 Why not just use Doxygen's HTML output? Or PhpDocumentor (which doesn't work)?
 
-Because Doxygen's docs are neither pretty nor Ajaxy. With RDoc, we can use whatever generator we like - we like sdoc ( http://github.com/voloko/sdoc ).
+Because Doxygen's docs are neither pretty nor Ajaxy. With RDoc, we can use pretty generators like sdoc ( http://github.com/voloko/sdoc ).
