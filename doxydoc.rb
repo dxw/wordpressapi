@@ -35,6 +35,7 @@ class RDoc::Parser::Doxygen < RDoc::Parser
         cdef.xpath('sectiondef/memberdef[@kind="variable"]').each do |attribute|
           name = attribute.xpath('name/text()').to_s
           attr = RDoc::Attr.new(nil, name, nil, nil)
+          attr.comment = attribute.xpath('initializer').text.gsub(/\s+/,' ')
           attributes << attr
         end
 
