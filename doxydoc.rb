@@ -34,7 +34,9 @@ class RDoc::Parser::Doxygen < RDoc::Parser
         methods = []
         (cdef/'sectiondef/memberdef[@kind="function"]').each do |function|
           name = (function/'name/text()').to_s
-          methods << RDoc::AnyMethod.new(nil, name)
+          method = RDoc::AnyMethod.new(nil, name)
+          method.params = (function/'argsstring/text()').to_s
+          methods << method
         end
 
         case cdef.attributes['kind']
