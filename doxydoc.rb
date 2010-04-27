@@ -23,14 +23,45 @@ class RDoc::Parser::Doxygen < RDoc::Parser
       puts "`doxygen #{@doxyfile.path}` exited with errors"
       exit
     end
+
     index = Hpricot(open(File.join(@doxyout,'index.xml')).read)
     (index/'/doxygenindex/compound').each do |compound|
+
       refid = compound[:refid].to_s
       compounddef = Hpricot(open(File.join(@doxyout, refid+'.xml')).read)
-      (compounddef/'/doxygen/compounddef/sectiondef[@kind="func"]/memberdef[@kind="function"]').each do |function|
-        name = (function/'name/text()').to_s
-        method = RDoc::AnyMethod.new(nil, name)
-        @top_level.add_method method
+      (compounddef/'/doxygen/compounddef').each do |cdef|
+
+        methods = []
+        (cdef/'sectiondef/memberdef[@kind="function"]').each do |function|
+          name = (function/'name/text()').to_s
+          methods << RDoc::AnyMethod.new(nil, name)
+        end
+
+        case cdef.attributes['kind']
+        when 'file'
+          obj = @top_level
+        when 'class'
+          name = (cdef/'compoundname/text()').to_s
+          obj = @top_level.class.find_class_named(name)
+          obj = @top_level.add_class(RDoc::NormalClass, name) unless obj
+        when 'namespace'
+          puts 'NAMSPOOCE'
+          raise Exception, 'arrrN' if methods.size > 0
+        when 'dir'
+          puts 'DIR'
+          raise Exception, 'arrrD' if methods.size > 0
+        when 'page'
+          puts 'PAIGE'
+          raise Exception, 'arrrP' if methods.size > 0
+        else
+          p cdef
+          raise Exception, 'zomg wtf'
+        end
+
+        methods.each do |m|
+          obj.add_method m
+        end
+
       end
     end
 
