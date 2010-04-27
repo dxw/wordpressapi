@@ -14,21 +14,25 @@ class RDoc::Parser::Doxygen < RDoc::Parser
   def initialize(top_level, file_name, content, options, stats)
     super
 
+    generate_superdoxy
+
     @path = file_name
     generate_doxyfile
   end
 
   def scan
-    unless system 'doxygen', @doxyfile.path
-      puts "`doxygen #{@doxyfile.path}` exited with errors"
-      exit
-    end
+    run_doxygen
 
     index = Nokogiri::XML(open(File.join(@doxyout,'index.xml')))
     index.xpath('/doxygenindex/compound').each do |compound|
 
       refid = compound.xpath('@refid').text
-      compounddef = Nokogiri::XML(open(File.join(@doxyout, refid+'.xml')))
+      file = File.join(@@superdoxy, refid+'.xml')
+      unless File.exist? file
+        file = File.join(@@superdoxy, 'wp-includes_2'+refid+'.xml')
+      end
+
+      compounddef = Nokogiri::XML(open(file))
       compounddef.xpath('/doxygen/compounddef').each do |cdef|
 
         attributes = []
@@ -86,7 +90,7 @@ class RDoc::Parser::Doxygen < RDoc::Parser
     @top_level
   end
 
-  def generate_doxyfile
+  def generate_doxyfile global = false
     @doxyfile = Tempfile.open('Doxyfile')
     @doxyout = nil
     Tempfile.open('doxygen') do |f|
@@ -95,7 +99,11 @@ class RDoc::Parser::Doxygen < RDoc::Parser
     end
     Dir.mkdir @doxyout
 
-    input_files = %Q%"#{@path}"%
+    if global
+      input_files = '.'
+    else
+      input_files = %Q%"#{@path}"%
+    end
     xml_output = %Q%"#{@doxyout}"%
     @doxyfile.write ERB.new(open('../Doxyfile.erb').read).result(binding)
     @doxyfile.flush
@@ -150,6 +158,21 @@ XSLT
     obj = @top_level.class.find_class_named(name)
     obj = @top_level.add_class(RDoc::NormalClass, name) unless obj
     obj
+  end
+
+  def generate_superdoxy
+    @@superdoxy ||= nil
+    if @@superdoxy.nil?
+      generate_doxyfile true
+      run_doxygen
+      @@superdoxy = @doxyout
+    end
+  end
+
+  def run_doxygen
+    unless system 'doxygen', @doxyfile.path
+      raise Exception, "`doxygen #{@doxyfile.path}` exited with errors"
+    end
   end
 
 end
