@@ -43,48 +43,7 @@ class RDoc::Parser::Doxygen < RDoc::Parser
           name = function.xpath('name/text()').to_s
           method = RDoc::AnyMethod.new(nil, name)
           method.params = function.xpath('argsstring/text()').to_s.gsub('&amp;','&')
-          xslt = Nokogiri::XSLT(<<XSLT)
-<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-  <xsl:output method="text" omit-xml-declaration="yes"/>
-
-  <xsl:template match="/">
-<xsl:apply-templates/>
-  </xsl:template>
-
-  <xsl:template match="para">
-<xsl:text>
-</xsl:text>
-<xsl:apply-templates/>
-<xsl:text>
-</xsl:text>
-  </xsl:template>
-
-  <xsl:template match="simplesect">
-==== <xsl:value-of select="@kind"/>
-<xsl:text>
-</xsl:text>
-<xsl:apply-templates/>
-  </xsl:template>
-
-  <xsl:template match="parameterlist">
-==== <xsl:value-of select="@kind"/>
-<xsl:text>
-</xsl:text>
-<xsl:apply-templates/>
-  </xsl:template>
-
-  <xsl:template match="parameteritem">
-[<xsl:value-of select="parameternamelist/parametername"/>] <xsl:apply-templates select="parameterdescription"/>
-  </xsl:template>
-
-</xsl:stylesheet>
-XSLT
-          comment = xslt.transform(function.xpath('detaileddescription').first).to_s
-          comment = comment.split("\n")[1..-1].join("\n") # omit-xml-declaration doesn't work
-          method.comment = comment
-          puts '------------------------------------------------------------------------------'
-          puts method.comment
-          puts '------------------------------------------------------------------------------'
+          method.comment = xml_to_rdoc function
           methods << method
         end
 
@@ -135,6 +94,51 @@ XSLT
     xml_output = %Q%"#{@doxyout}"%
     @doxyfile.write ERB.new(open(File.join(File.dirname(__FILE__),'Doxyfile.erb')).read).result(binding)
     @doxyfile.flush
+  end
+
+  def xml_to_rdoc element
+    xslt = Nokogiri::XSLT(<<XSLT)
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+  <xsl:output method="text" omit-xml-declaration="yes"/>
+
+  <xsl:template match="/">
+<xsl:apply-templates/>
+  </xsl:template>
+
+  <xsl:template match="para">
+<xsl:text>
+</xsl:text>
+<xsl:apply-templates/>
+<xsl:text>
+</xsl:text>
+  </xsl:template>
+
+  <xsl:template match="simplesect">
+==== <xsl:value-of select="@kind"/>
+<xsl:text>
+</xsl:text>
+<xsl:apply-templates/>
+  </xsl:template>
+
+  <xsl:template match="parameterlist">
+==== <xsl:value-of select="@kind"/>
+<xsl:text>
+</xsl:text>
+<xsl:apply-templates/>
+  </xsl:template>
+
+  <xsl:template match="parameteritem">
+[<xsl:value-of select="parameternamelist/parametername"/>] <xsl:apply-templates select="parameterdescription"/>
+  </xsl:template>
+
+</xsl:stylesheet>
+XSLT
+    comment = xslt.transform(element.xpath('detaileddescription').first).to_s
+    comment = comment.split("\n")[1..-1].join("\n") # omit-xml-declaration doesn't work
+    puts '------------------------------------------------------------------------------'
+    puts comment
+    puts '------------------------------------------------------------------------------'
+    comment
   end
 
 end
