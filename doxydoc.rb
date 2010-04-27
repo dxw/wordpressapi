@@ -31,6 +31,13 @@ class RDoc::Parser::Doxygen < RDoc::Parser
       compounddef = Nokogiri::XML(open(File.join(@doxyout, refid+'.xml')))
       compounddef.xpath('/doxygen/compounddef').each do |cdef|
 
+        attributes = []
+        cdef.xpath('sectiondef/memberdef[@kind="variable"]').each do |attribute|
+          name = attribute.xpath('name/text()').to_s
+          attr = RDoc::Attr.new(nil, name, nil, nil)
+          attributes << attr
+        end
+
         methods = []
         cdef.xpath('sectiondef/memberdef[@kind="function"]').each do |function|
           name = function.xpath('name/text()').to_s
@@ -62,6 +69,9 @@ class RDoc::Parser::Doxygen < RDoc::Parser
 
         methods.each do |m|
           obj.add_method m
+        end
+        attributes.each do |a|
+          obj.add_attribute a
         end
 
       end
