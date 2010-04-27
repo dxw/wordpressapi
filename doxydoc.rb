@@ -27,13 +27,13 @@ class RDoc::Parser::Doxygen < RDoc::Parser
     index = Nokogiri::XML(open(File.join(@doxyout,'index.xml')))
     index.xpath('/doxygenindex/compound').each do |compound|
 
-      refid = compound[:refid].to_s
+      refid = compound.xpath('@refid').text
       compounddef = Nokogiri::XML(open(File.join(@doxyout, refid+'.xml')))
       compounddef.xpath('/doxygen/compounddef').each do |cdef|
 
         attributes = []
         cdef.xpath('sectiondef/memberdef[@kind="variable"]').each do |attribute|
-          name = attribute.xpath('name/text()').to_s
+          name = attribute.xpath('name').text
           next if %w[ else endif endwhile false if return this ].include? name
           attr = RDoc::Attr.new(nil, name, nil, nil)
           attr.comment = attribute.xpath('initializer').text.gsub(/\s+/,' ')
@@ -42,22 +42,22 @@ class RDoc::Parser::Doxygen < RDoc::Parser
 
         methods = []
         cdef.xpath('sectiondef/memberdef[@kind="function"]').each do |function|
-          name = function.xpath('name/text()').to_s
+          name = function.xpath('name').text
           method = RDoc::AnyMethod.new(nil, name)
-          method.params = function.xpath('argsstring/text()').to_s.gsub('&amp;','&')
+          method.params = function.xpath('argsstring').text.gsub('&amp;','&')
           method.comment = xml_to_rdoc function
           methods << method
         end
 
-        case cdef.xpath('@kind').to_s
+        case cdef.xpath('@kind').text
         when 'file'
           obj = @top_level
         when 'class'
-          name = cdef.xpath('compoundname/text()').to_s
+          name = cdef.xpath('compoundname').text
           obj = find_or_create_class(name)
 
           # Superclasses
-          parent = cdef.xpath('basecompoundref/text()').to_s
+          parent = cdef.xpath('basecompoundref').text
           obj.superclass = parent unless parent.empty?
         when 'namespace'
           puts 'NAMSPOOCE'
@@ -138,7 +138,7 @@ class RDoc::Parser::Doxygen < RDoc::Parser
 
 </xsl:stylesheet>
 XSLT
-    comment = xslt.transform(element.xpath('detaileddescription').first).to_s
+    comment = xslt.transform(element.xpath('detaileddescription').first).text
     comment = comment.split("\n")[1..-1].join("\n") # omit-xml-declaration doesn't work
     puts '------------------------------------------------------------------------------'
     puts comment
