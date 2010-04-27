@@ -45,7 +45,7 @@ class RDoc::Parser::Doxygen < RDoc::Parser
           method.params = function.xpath('argsstring/text()').to_s.gsub('&amp;','&')
           xslt = Nokogiri::XSLT(<<XSLT)
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-  <xsl:output method="text"/>
+  <xsl:output method="text" omit-xml-declaration="yes"/>
 
   <xsl:template match="/">
 <xsl:apply-templates/>
@@ -80,7 +80,11 @@ class RDoc::Parser::Doxygen < RDoc::Parser
 </xsl:stylesheet>
 XSLT
           comment = xslt.transform(function.xpath('detaileddescription').first).to_s
+          comment = comment.split("\n")[1..-1].join("\n") # omit-xml-declaration doesn't work
           method.comment = comment
+          puts '------------------------------------------------------------------------------'
+          puts method.comment
+          puts '------------------------------------------------------------------------------'
           methods << method
         end
 
