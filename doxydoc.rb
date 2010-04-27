@@ -3,7 +3,7 @@ require 'rdoc' # ensure we're using the gem, not the stdlib
 require 'rdoc/rdoc'
 require 'rdoc/parser'
 require 'tempfile'
-require 'hpricot'
+require 'nokogiri'
 
 class RDoc::Parser::Doxygen < RDoc::Parser
 
@@ -24,26 +24,26 @@ class RDoc::Parser::Doxygen < RDoc::Parser
       exit
     end
 
-    index = Hpricot(open(File.join(@doxyout,'index.xml')).read)
-    (index/'/doxygenindex/compound').each do |compound|
+    index = Nokogiri::XML(open(File.join(@doxyout,'index.xml')))
+    index.xpath('/doxygenindex/compound').each do |compound|
 
       refid = compound[:refid].to_s
-      compounddef = Hpricot(open(File.join(@doxyout, refid+'.xml')).read)
-      (compounddef/'/doxygen/compounddef').each do |cdef|
+      compounddef = Nokogiri::XML(open(File.join(@doxyout, refid+'.xml')))
+      compounddef.xpath('/doxygen/compounddef').each do |cdef|
 
         methods = []
-        (cdef/'sectiondef/memberdef[@kind="function"]').each do |function|
-          name = (function/'name/text()').to_s
+        cdef.xpath('sectiondef/memberdef[@kind="function"]').each do |function|
+          name = function.xpath('name/text()').to_s
           method = RDoc::AnyMethod.new(nil, name)
-          method.params = (function/'argsstring/text()').to_s
+          method.params = function.xpath('argsstring/text()').to_s
           methods << method
         end
 
-        case cdef.attributes['kind']
+        case cdef.xpath('@kind').to_s
         when 'file'
           obj = @top_level
         when 'class'
-          name = (cdef/'compoundname/text()').to_s
+          name = cdef.xpath('compoundname/text()').to_s
           obj = @top_level.class.find_class_named(name)
           obj = @top_level.add_class(RDoc::NormalClass, name) unless obj
         when 'namespace'
