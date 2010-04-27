@@ -35,7 +35,7 @@ class RDoc::Parser::Doxygen < RDoc::Parser
         cdef.xpath('sectiondef/memberdef[@kind="function"]').each do |function|
           name = function.xpath('name/text()').to_s
           method = RDoc::AnyMethod.new(nil, name)
-          method.params = function.xpath('argsstring/text()').to_s
+          method.params = function.xpath('argsstring/text()').to_s.gsub('&amp;','&')
           methods << method
         end
 
