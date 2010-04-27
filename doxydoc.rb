@@ -61,13 +61,13 @@ class RDoc::Parser::Doxygen < RDoc::Parser
           obj.superclass = parent unless parent.empty?
         when 'namespace'
           puts 'NAMSPOOCE'
-          raise Exception, 'arrrN' if methods.size > 0
+          raise Exception, 'arrrN' unless methods.empty?
         when 'dir'
           puts 'DIR'
-          raise Exception, 'arrrD' if methods.size > 0
+          raise Exception, 'arrrD' unless methods.empty?
         when 'page'
           puts 'PAIGE'
-          raise Exception, 'arrrP' if methods.size > 0
+          raise Exception, 'arrrP' unless methods.empty?
         else
           p cdef
           raise Exception, 'zomg wtf'
