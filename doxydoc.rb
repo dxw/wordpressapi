@@ -93,7 +93,7 @@ class RDoc::Parser::Doxygen < RDoc::Parser
 
     input_files = %Q%"#{@path}"%
     xml_output = %Q%"#{@doxyout}"%
-    @doxyfile.write ERB.new(open(File.join(File.dirname(__FILE__),'Doxyfile.erb')).read).result(binding)
+    @doxyfile.write ERB.new(open('../Doxyfile.erb').read).result(binding)
     @doxyfile.flush
   end
 
@@ -146,5 +146,8 @@ end
 
 if __FILE__ == $0
   r = RDoc::RDoc.new
-  r.document %w[wp-includes -o output]
+  wpdir = 'wordpress'
+  output = 'output'
+  Dir.chdir wpdir
+  r.document ['.', '-o', "../#{output}"]
 end
