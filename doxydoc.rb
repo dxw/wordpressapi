@@ -147,7 +147,7 @@ end
 if __FILE__ == $0
   r = RDoc::RDoc.new
   wpdir = 'wordpress'
-  output = 'output'
+  output = 'doc'
   Dir.chdir wpdir
-  r.document ['.', '-o', "../#{output}"]
+  r.document ['wp-includes', '-o', "../#{output}"]
 end
