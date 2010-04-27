@@ -54,8 +54,11 @@ class RDoc::Parser::Doxygen < RDoc::Parser
           obj = @top_level
         when 'class'
           name = cdef.xpath('compoundname/text()').to_s
-          obj = @top_level.class.find_class_named(name)
-          obj = @top_level.add_class(RDoc::NormalClass, name) unless obj
+          obj = find_or_create_class(name)
+
+          # Superclasses
+          parent = cdef.xpath('basecompoundref/text()').to_s
+          obj.superclass = parent unless parent.empty?
         when 'namespace'
           puts 'NAMSPOOCE'
           raise Exception, 'arrrN' if methods.size > 0
@@ -141,6 +144,12 @@ XSLT
     puts comment
     puts '------------------------------------------------------------------------------'
     comment
+  end
+
+  def find_or_create_class name
+    obj = @top_level.class.find_class_named(name)
+    obj = @top_level.add_class(RDoc::NormalClass, name) unless obj
+    obj
   end
 
 end
