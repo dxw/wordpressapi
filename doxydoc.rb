@@ -11,6 +11,8 @@ class RDoc::Parser::Doxygen < RDoc::Parser
 
   attr_reader :content
 
+  include RDoc::RubyToken
+
   def initialize(top_level, file_name, content, options, stats)
     super
 
@@ -50,6 +52,14 @@ class RDoc::Parser::Doxygen < RDoc::Parser
           method = RDoc::AnyMethod.new(nil, name)
           method.params = function.xpath('argsstring').text.gsub('&amp;','&')
           method.comment = xml_to_rdoc function
+
+          # Source (just File xxx, line n)
+          method.collect_tokens
+          line_no = function.xpath('location/@bodystart').text.to_i
+          token = TkCOMMENT.new nil, line_no, 1
+          token.set_text "# File #{@top_level.absolute_name}, line #{line_no}"
+          method.add_token token
+
           methods << method
         end
 
