@@ -7,6 +7,28 @@ require 'rdoc/parser'
 require 'tempfile'
 require 'nokogiri'
 
+def get_codex_links function
+  fnref = []
+  tmtag = []
+  $codex_index.each do |link|
+    fnref << link if link =~ %r[^http://codex.wordpress.org/Function_Reference/#{function}$]
+    tmtag << link if link =~ %r[^http://codex.wordpress.org/Template_Tags/#{function}$]
+  end
+
+  if fnref.size > 1 or tmtag.size > 1
+    p function
+    p fnref
+    p tmtag
+    raise Exception, 'wtf?'
+  end
+
+  links = fnref.map {|l| ['Function Reference', l]} + tmtag.map {|l| ['Template Tags', l]}
+  links.map! { |name, link| %Q%<a href="#{link}">#{name}</a>% }.join(' | ')
+  links.empty? ? nil : links
+end
+
+$codex_index = open('codex_index.txt').read.split("\n")
+
 class RDoc::Parser::Doxygen < RDoc::Parser
 
   parse_files_matching(/\.php$/)
