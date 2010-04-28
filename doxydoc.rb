@@ -1,3 +1,5 @@
+#!/usr/bin/env ruby
+
 require 'rubygems'
 require 'rdoc' # ensure we're using the gem, not the stdlib
 require 'rdoc/rdoc'
