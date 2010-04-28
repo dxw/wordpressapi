@@ -180,5 +180,5 @@ end
 if __FILE__ == $0
   r = RDoc::RDoc.new
   output = 'doc'
-  r.document ['README.rdoc', 'wp-includes', '-o', output]
+  r.document ['README.rdoc', 'wp-includes', '-o', output, '-t', 'WordPress API']
 end
