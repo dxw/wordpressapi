@@ -147,7 +147,7 @@ class RDoc::Parser::Doxygen < RDoc::Parser
 </xsl:stylesheet>
 XSLT
     comment = xslt.transform(element.xpath('detaileddescription').first).text
-    comment = comment.split("\n")[1..-1].join("\n") # omit-xml-declaration doesn't work
+    comment = comment.split("\n")[1..-1].join("\n").strip # omit-xml-declaration doesn't work
     puts '------------------------------------------------------------------------------'
     puts comment
     puts '------------------------------------------------------------------------------'
