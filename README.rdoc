@@ -1,4 +1,4 @@
-= WordPress API
+= WordPress Docs
 
 WPDocs provides the standard  WordPress[http://wordpress.org/] documentation in a delightful search interface (rendered using RDoc[http://rdoc.rubyforge.org/]).
 
@@ -21,4 +21,14 @@ And your documentation will be in ./doc. We haven't tried accessing it locally (
 
 == How it works
 
-We create an RDoc::Parser that uses Doxygen, and then we use some magick to convert that into RDoc's internal format - mostly wpdoc ( http://github.com/dxw/sdoc/tree/wordpress), our fork of the beautiful sdoc.
+We magick[http://github.com/dxw/wordpressapi] to convert WordPress's documentation to RDoc and format the output using wpdoc[http://github.com/dxw/sdoc/tree/wordpress], our fork of the beautiful sdoc[http://github.com/voloko/sdoc].
+
+== Credits
+
+Written by Tom Adams (with some input from Harry Metcalfe) of {The Dextrous Web}[http://thedextrousweb.com/].
+
+Based on RailsAPI[http://railsapi.com/] (which is awesome).
+
+Using GeSHi[http://qbnz.com/highlighter/] for syntax highlighting.
+
+(Here at The Dextrous Web we remain committed to backporting the Rails culture to WordPress.)
