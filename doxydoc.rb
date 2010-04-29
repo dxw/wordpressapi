@@ -233,6 +233,53 @@ XSLT
 
 end
 
+class RDoc::AnyMethod
+  def geshi code
+    php = <<PHP
+include("../geshi/geshi.php");
+$code = file_get_contents("php://stdin");
+$geshi = new GeSHi($code, "php");
+echo $geshi->parse_code();
+PHP
+    IO.popen("php -r '#{php}'", 'r+') do |f|
+      f.write(code)
+      f.close_write
+      out = f.readlines
+      out.first.sub!(%r&^<pre[^>]*>&,'')
+      out.last.sub!(%r&</pre>$&,'')
+      out.join
+    end
+  end
+  def markup_code
+    return '' unless @token_stream
+    src = ""
+    @token_stream.each do |t|
+      next unless t
+      style = case t
+              when RDoc::RubyToken::TkCOMMENT      then "ruby-comment cmt"
+              else
+                nil
+              end
+
+      if t.is_a? RDoc::RubyToken::TkIDENTIFIER
+        text = geshi(t.text)
+      else
+        text = CGI.escapeHTML t.text
+      end
+
+      if style
+        src << "<span class=\"#{style}\">#{text}</span>"
+      else
+        src << text
+      end
+    end
+
+    add_line_numbers src
+
+    src
+  end
+end
+
 if __FILE__ == $0
   r = RDoc::RDoc.new
   output = 'doc'
