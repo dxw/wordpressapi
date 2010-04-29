@@ -233,5 +233,5 @@ end
 if __FILE__ == $0
   r = RDoc::RDoc.new
   output = 'doc'
-  r.document ['doxydoc.rb', 'README.rdoc', 'wp-includes', '-o', output, '-t', 'WordPress API']
+  r.document ['README.rdoc', 'wp-includes', '-o', output, '-t', 'WordPress API']
 end
