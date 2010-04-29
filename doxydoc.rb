@@ -24,7 +24,7 @@ def get_codex_links function
   end
 
   links = fnref.map {|l| ['Function Reference', l]} + tmtag.map {|l| ['Template Tags', l]}
-  links = links.map { |name, link| %Q%<a href="#{link}">#{name}</a>% }.join(' | ')
+  links = links.map { |name, link| %Q%<a target="_blank" href="#{link}">#{name}</a>% }.join(' | ')
   links.empty? ? nil : links
 end
 
