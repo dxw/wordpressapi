@@ -194,7 +194,10 @@ XSLT
 
   def find_or_create_class name
     obj = @top_level.class.find_class_named(name)
-    obj = @top_level.add_class(RDoc::NormalClass, name) unless obj
+    unless obj
+      obj = @top_level.add_class(RDoc::NormalClass, name)
+      obj.superclass = nil
+    end
     obj
   end
 
