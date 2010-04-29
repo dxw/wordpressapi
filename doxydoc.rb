@@ -91,6 +91,9 @@ class RDoc::Parser::Doxygen < RDoc::Parser
         case cdef.xpath('@kind').text
         when 'file'
           obj = find_or_create_class('Global')
+          obj.comment = <<RDOC if obj.comment.empty?
+All the functions not bound to classes -- this is where the majority of WordPress happens.
+RDOC
         when 'class'
           name = cdef.xpath('compoundname').text
           obj = find_or_create_class(name)
