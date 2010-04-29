@@ -9,6 +9,7 @@ How to generate the documentation:
   git clone git://github.com/dxw/wordpressapi.git
   cd wordpressapi
   gem install wpdoc
+  git clone git://github.com/dxw/geshi.git
   git clone git://github.com/dxw/wordpress.git
   ln -s wordpress/wp-includes
   ruby update_codex.rb
