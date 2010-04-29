@@ -115,7 +115,7 @@ class RDoc::Parser::Doxygen < RDoc::Parser
           if obj.nil?
             chr = m.name[0..0].upcase
             chr = '_' unless chr.match /^[A-Z]$/
-            obj = find_or_create_class(chr)
+            obj = find_or_create_global(chr)
             obj.add_method m
             obj = nil
           else
@@ -206,6 +206,19 @@ XSLT
     obj = @top_level.class.find_class_named(name)
     unless obj
       obj = @top_level.add_class(RDoc::NormalClass, name)
+      obj.superclass = nil
+    end
+    obj
+  end
+
+  def find_or_create_global letter
+    global = @top_level.find_module_named('Global')
+    unless global
+      global = @top_level.add_module(RDoc::NormalModule, 'Global')
+    end
+    obj = global.find_class_named(letter)
+    unless obj
+      obj = global.add_class(RDoc::NormalClass, letter)
       obj.superclass = nil
     end
     obj
