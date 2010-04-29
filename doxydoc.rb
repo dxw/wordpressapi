@@ -215,11 +215,13 @@ XSLT
     global = @top_level.find_module_named('Global')
     unless global
       global = @top_level.add_module(RDoc::NormalModule, 'Global')
+      global.comment = 'Global functions have been split up to improve performance.'
     end
     obj = global.find_class_named(letter)
     unless obj
       obj = global.add_class(RDoc::NormalClass, letter)
       obj.superclass = nil
+      obj.comment = 'Global functions beginning with '+letter+'.'
     end
     obj
   end
