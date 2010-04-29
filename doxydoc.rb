@@ -131,9 +131,13 @@ RDOC
   def generate_doxyfile global = false
     @doxyfile = Tempfile.open('Doxyfile')
     @doxyout = nil
-    Tempfile.open('doxygen') do |f|
-      @doxyout=f.path
-      f.unlink
+    begin
+      Tempfile.open('doxygen') do |f|
+        @doxyout=f.path
+        f.unlink
+      end
+    rescue NoMethodError
+      # Fix for 1.8.6 -> unlink sets @data to nil, which causes problems on exit
     end
     Dir.mkdir @doxyout
 
