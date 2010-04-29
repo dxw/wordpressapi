@@ -78,12 +78,11 @@ class RDoc::Parser::Doxygen < RDoc::Parser
           method.params = function.xpath('argsstring').text.gsub('&amp;','&')
           method.comment = xml_to_rdoc function
 
-          # Source (just File xxx, line n)
+          # Source
           method.collect_tokens
           line_no = function.xpath('location/@bodystart').text.to_i
-          token = TkCOMMENT.new nil, line_no, 1
-          token.set_text "# File #{@top_level.absolute_name}, line #{line_no}"
-          method.add_token token
+          finish_line = function.xpath('location/@bodyend').text.to_i
+          method.add_tokens get_source(@path, line_no, finish_line)
 
           methods << method
         end
@@ -91,6 +90,7 @@ class RDoc::Parser::Doxygen < RDoc::Parser
         case cdef.xpath('@kind').text
         when 'file'
           obj = find_or_create_class('Global')
+
           obj.comment = <<RDOC if obj.comment.empty?
 All the functions not bound to classes -- this is where the majority of WordPress happens.
 RDOC
@@ -213,10 +213,25 @@ XSLT
     end
   end
 
+  def get_source path, start_line, end_line
+    tokens = []
+
+    token = TkCOMMENT.new nil, start_line, 1, "# File #{@top_level.absolute_name}, line #{start_line}"
+    tokens << token
+
+    open(path) do |f|
+      src = f.read.split("\n")[(start_line-1)...end_line].join("\n")
+      token = TkIDENTIFIER.new nil, start_line, 1, "\n"+src
+      tokens << token
+    end
+
+    tokens
+  end
+
 end
 
 if __FILE__ == $0
   r = RDoc::RDoc.new
   output = 'doc'
-  r.document ['README.rdoc', 'wp-includes', '-o', output, '-t', 'WordPress API']
+  r.document ['doxydoc.rb', 'README.rdoc', 'wp-includes', '-o', output, '-t', 'WordPress API']
 end
