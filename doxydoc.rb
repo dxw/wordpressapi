@@ -90,7 +90,7 @@ class RDoc::Parser::Doxygen < RDoc::Parser
 
         case cdef.xpath('@kind').text
         when 'file'
-          obj = @top_level
+          obj = find_or_create_class('Global')
         when 'class'
           name = cdef.xpath('compoundname').text
           obj = find_or_create_class(name)
