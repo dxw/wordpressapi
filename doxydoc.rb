@@ -4,6 +4,7 @@ require 'rubygems'
 require 'rdoc' # ensure we're using the gem, not the stdlib
 require 'rdoc/rdoc'
 require 'rdoc/parser'
+require 'wpdoc'
 require 'tempfile'
 require 'nokogiri'
 
