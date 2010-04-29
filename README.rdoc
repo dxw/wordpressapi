@@ -1,10 +1,12 @@
 = WordPress API
 
-WordPress[http://wordpress.org/] self-documentation rendered using RDoc[http://rdoc.rubyforge.org/].
+WPDocs provides the standard  WordPress[http://wordpress.org/] documentation in a delightful search interface (rendered using RDoc[http://rdoc.rubyforge.org/]).
+
+Hopefully it's self-explanatory. Start typing the name of a function or template tag in the box at the top left to get started.
 
 == Generate your own
 
-How to generate the documentation:
+If you like, you can check out the code and generate a version of this documentation to use locally:
 
   git clone git://github.com/dxw/wordpressapi.git
   cd wordpressapi
@@ -15,14 +17,8 @@ How to generate the documentation:
   ruby update_codex.rb
   ruby doxydoc.rb
 
-And your documentation will be in doc.
+And your documentation will be in ./doc. We haven't tried accessing it locally (ie, file://) so we're not sure if that will work. Using your favourite web server is advised.
 
 == How it works
 
-We create an RDoc::Parser that uses Doxygen, and then we use some magick to convert that into RDoc's internal format.
-
-== Motivation
-
-Why not just use Doxygen's HTML output? Or PhpDocumentor (which doesn't work)?
-
-Because Doxygen's docs are neither pretty nor Ajaxy. With RDoc, we can use pretty generators like wpdoc ( http://github.com/dxw/sdoc/tree/wordpress ), our fork of the beautiful sdoc.
+We create an RDoc::Parser that uses Doxygen, and then we use some magick to convert that into RDoc's internal format - mostly wpdoc ( http://github.com/dxw/sdoc/tree/wordpress), our fork of the beautiful sdoc.
