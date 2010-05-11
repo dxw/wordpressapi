@@ -214,7 +214,23 @@ XSLT
     end
   end
 
+  def doxygen_installed?
+    unless system 'which doxygen'
+      case RUBY_PLATFORM
+      when /darwin/
+        raise Exception "It looks like doxygen isn't installed, or on your path. You might want to try installing it with 'brew install doxygen', or 'port install doxygen', or if you're feeling masochistic, downloading the source from http://www.stack.nl/~dimitri/doxygen and compiling it yourself"
+      when /linux/
+        raise Exception "It looks like doxygen isn't installed, or on your path. Try installing with yum install doxygen, apt-get install doxygen, or if you're feeling masochistic, downloading the source from http://www.stack.nl/~dimitri/doxygen and compiling yourself."
+      end
+    end
+    
+  end
+
+
   def run_doxygen
+    # lets check if we have it installed first before trying to use it
+    doxygen_installed?
+    
     unless system 'doxygen', @doxyfile.path
       raise Exception, "`doxygen #{@doxyfile.path}` exited with errors"
     end
