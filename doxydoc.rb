@@ -41,6 +41,10 @@ class RDoc::Parser::Doxygen < RDoc::Parser
   def initialize(top_level, file_name, content, options, stats)
     super
 
+    # lets check if we have it installed first before trying to use it
+    doxygen_installed?
+
+
     generate_superdoxy
 
     @path = file_name
@@ -218,9 +222,9 @@ XSLT
     unless system 'which doxygen'
       case RUBY_PLATFORM
       when /darwin/
-        raise Exception "It looks like doxygen isn't installed, or on your path. You might want to try installing it with 'brew install doxygen', or 'port install doxygen', or if you're feeling masochistic, downloading the source from http://www.stack.nl/~dimitri/doxygen and compiling it yourself"
+        raise Exception, "It looks like doxygen isn't installed, or on your path.\n\nYou might want to try installing it with 'brew install doxygen', or 'port install doxygen'.\nOr, if you're feeling masochistic, downloading the source from http://www.stack.nl/~dimitri/doxygen and compiling it yourself.\n\n"
       when /linux/
-        raise Exception "It looks like doxygen isn't installed, or on your path. Try installing with yum install doxygen, apt-get install doxygen, or if you're feeling masochistic, downloading the source from http://www.stack.nl/~dimitri/doxygen and compiling yourself."
+        raise Exception, "It looks like doxygen isn't installed, or on your path.\n\n Try installing with one of the following depending on what flavour of linux you're using:\nyum install doxygen, apt-get install doxygen, or if you're feeling masochistic, downloading the source from http://www.stack.nl/~dimitri/doxygen and compiling yourself.\n\n"
       end
     end
     
@@ -228,9 +232,6 @@ XSLT
 
 
   def run_doxygen
-    # lets check if we have it installed first before trying to use it
-    doxygen_installed?
-    
     unless system 'doxygen', @doxyfile.path
       raise Exception, "`doxygen #{@doxyfile.path}` exited with errors"
     end
