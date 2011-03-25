@@ -265,9 +265,16 @@ XSLT
     tokens << token
 
     open(path) do |f|
-      src = f.read.split("\n")[(start_line-1)...end_line].join("\n")
-      token = TkIDENTIFIER.new nil, start_line, 1, "\n"+src
-      tokens << token
+      ff = f.read
+      # Some people want to party like it's 1995
+      begin
+        src = ff.split("\n")[(start_line-1)...end_line].join("\n")
+        token = TkIDENTIFIER.new nil, start_line, 1, "\n"+src
+        tokens << token
+      rescue
+        ff.force_encoding('ISO-8859-1')
+        retry
+      end
     end
 
     tokens
