@@ -8,12 +8,12 @@ Hopefully it's self-explanatory. Start typing the name of a function or template
 
 If you like, you can check out the code and generate a version of this documentation to use locally:
 
+  gem install wpdoc # See also: http://github.com/dxw/wpdoc
   git clone git://github.com/dxw/wordpressapi.git
   cd wordpressapi
-  gem install wpdoc
   git submodule update --init
   ruby update_codex.rb
-  ruby doxydoc.rb # This takes up to 40 minutes on my system
+  ruby doxydoc.rb # This takes just over 40 minutes on my system
 
 And your documentation will be in ./doc. We haven't tried accessing it locally (ie, file://) so we're not sure if that will work. Using your favourite web server is advised.
 
