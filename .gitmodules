@@ -1,0 +1,6 @@
+[submodule "geshi"]
+	path = geshi
+	url = git://github.com/dxw/geshi.git
+[submodule "wordpress"]
+	path = wordpress
+	url = git://github.com/dxw/wordpress.git

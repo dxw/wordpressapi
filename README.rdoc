@@ -11,9 +11,7 @@ If you like, you can check out the code and generate a version of this documenta
   git clone git://github.com/dxw/wordpressapi.git
   cd wordpressapi
   gem install wpdoc
-  git clone git://github.com/dxw/geshi.git
-  git clone git://github.com/dxw/wordpress.git
-  ln -s wordpress/wp-includes
+  git submodule update --init
   ruby update_codex.rb
   ruby doxydoc.rb
 
