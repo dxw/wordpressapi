@@ -12,8 +12,8 @@ def get_codex_links function
   fnref = []
   tmtag = []
   $codex_index.each do |link|
-    fnref << link if link =~ %r[^http://codex.wordpress.org/Function_Reference/#{function}$]
-    tmtag << link if link =~ %r[^http://codex.wordpress.org/Template_Tags/#{function}$]
+    fnref << link if link =~ %r[^http://codex\.wordpress\.org/Function_Reference/#{function}$]
+    tmtag << link if link =~ %r[^http://codex\.wordpress\.org/Template_Tags/#{function}$]
   end
 
   if fnref.size > 1 or tmtag.size > 1
