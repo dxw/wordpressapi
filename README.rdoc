@@ -8,6 +8,7 @@ Hopefully it's self-explanatory. Start typing the name of a function or template
 
 If you like, you can check out the code and generate a version of this documentation to use locally:
 
+  gem install rdoc
   gem install wpdoc # See also: http://github.com/dxw/wpdoc
   git clone git://github.com/dxw/wordpressapi.git
   cd wordpressapi

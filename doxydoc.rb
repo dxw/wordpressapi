@@ -128,6 +128,7 @@ class RDoc::Parser::Doxygen < RDoc::Parser
         end
         unless obj.nil?
           attributes.each do |a|
+            a.rw = []
             obj.add_attribute a
           end
         end
@@ -198,7 +199,9 @@ class RDoc::Parser::Doxygen < RDoc::Parser
 
 </xsl:stylesheet>
 XSLT
-    comment = xslt.transform(element.xpath('detaileddescription').first).text
+    # Nokogiri::XSLT#transform argument must be Nokogiri::XML::Document
+    e = Nokogiri::XML(element.xpath('detaileddescription').first.to_s)
+    comment = xslt.transform(e).text
     comment = comment.split("\n")[1..-1].join("\n").strip # omit-xml-declaration doesn't work
     puts '------------------------------------------------------------------------------'
     puts comment
@@ -330,7 +333,16 @@ PHP
 end
 
 if __FILE__ == $0
+  # o = RDoc::Options.new
+  # o.generator = RDoc::RDoc::GENERATORS['shtml']
+
   r = RDoc::RDoc.new
-  output = 'doc'
-  r.document ['README.rdoc', 'wp-includes', '-o', output, '-t', 'WordPress API']
+  # r.document o
+
+  r.document [
+    'README.rdoc', 'wp-includes',
+    '-o', 'doc',
+    '-t', 'WordPress API'
+    # '--fmt', 'shtml'
+  ]
 end
