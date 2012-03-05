@@ -333,16 +333,12 @@ PHP
 end
 
 if __FILE__ == $0
-  # o = RDoc::Options.new
-  # o.generator = RDoc::RDoc::GENERATORS['shtml']
-
   r = RDoc::RDoc.new
-  # r.document o
 
   r.document [
     'README.rdoc', 'wp-includes',
     '-o', 'doc',
-    '-t', 'WordPress API'
-    # '--fmt', 'shtml'
+    '-t', 'WordPress API',
+    '--fmt', 'shtml'
   ]
 end

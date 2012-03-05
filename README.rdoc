@@ -16,7 +16,9 @@ If you like, you can check out the code and generate a version of this documenta
   ruby update_codex.rb
   ruby doxydoc.rb # This takes just over 40 minutes on my system
 
-And your documentation will be in ./doc. We haven't tried accessing it locally (ie, file://) so we're not sure if that will work. Using your favourite web server is advised.
+Then just open up doc/index.html in your Web browser.
+
+We haven't tried accessing it locally (ie, file://) so we're not sure if that will work. Using your favourite web server is advised.
 
 == How it works
 
