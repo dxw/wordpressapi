@@ -1,8 +1,8 @@
 #!/usr/bin/env ruby
 
 require 'rubygems'
-require 'nokogiri'
-require 'open-uri'
+require 'bundler/setup'
+Bundler.require
 
 class ExtractCodex
   def initialize
