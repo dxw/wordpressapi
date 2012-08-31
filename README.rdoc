@@ -13,6 +13,7 @@ If you like, you can check out the code and generate a version of this documenta
   git clone git://github.com/dxw/wordpressapi.git
   cd wordpressapi
   git submodule update --init --recursive
+  bundle install
   sh ./update.sh # This will check out the latest WordPress, update the codex, and generate the documentation
 
 Then just open up doc/index.html in your Web browser.
