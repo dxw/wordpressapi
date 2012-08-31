@@ -12,9 +12,7 @@ If you like, you can check out the code and generate a version of this documenta
   gem install wpdoc # See also: http://github.com/dxw/wpdoc
   git clone git://github.com/dxw/wordpressapi.git
   cd wordpressapi
-  git submodule update --init
-  ruby update_codex.rb
-  ruby doxydoc.rb # This takes just over 40 minutes on my system
+  sh ./update.sh # This will check out the latest WordPress, update the codex, and generate the documentation
 
 Then just open up doc/index.html in your Web browser.
 
@@ -26,10 +24,10 @@ We use magick[http://github.com/dxw/wordpressapi] to convert WordPress's documen
 
 == Credits
 
-Written by Tom Adams (with some input from Harry Metcalfe) of {The Dextrous Web}[http://thedextrousweb.com/].
+Written by Tom Adams (with some input from Harry Metcalfe) of {dxw}[http://dxw.com/].
 
 Based on RailsAPI[http://railsapi.com/] (which is awesome).
 
 Using GeSHi[http://qbnz.com/highlighter/] for syntax highlighting.
 
-(Here at The Dextrous Web we remain committed to backporting the Rails culture to WordPress.)
+(Here at dxw we remain committed to backporting the Rails culture to WordPress.)
