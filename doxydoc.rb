@@ -108,7 +108,7 @@ class RDoc::Parser::Doxygen < RDoc::Parser
           raise Exception, 'arrrP' unless methods.empty?
         else
           p cdef
-          raise Exception, 'zomg wtf'
+          # raise Exception, 'zomg wtf'
         end
 
         methods.each do |m|
